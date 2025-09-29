@@ -14,7 +14,7 @@ public class GameAPI : MonoBehaviour
     {
         var requestData = new { name = playerName, password = password };
         string jsonData = JsonConvert.SerializeObject(requestData);
-        Debug.Log($"Registerting player : {jsonData}");
+        Debug.Log($"Registering player : {jsonData}");
 
         using (UnityWebRequest request = new UnityWebRequest($"{baseUrl}/register", "POST"))
         {
@@ -41,7 +41,7 @@ public class GameAPI : MonoBehaviour
         var requestData = new { name = playerName, password = password };
         string jsonData = JsonConvert.SerializeObject(requestData);
 
-        using (UnityWebRequest request = new UnityWebRequest($"{baseUrl}/register", "POST"))
+        using (UnityWebRequest request = new UnityWebRequest($"{baseUrl}/login", "POST"))
         {
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -60,14 +60,14 @@ public class GameAPI : MonoBehaviour
 
                 try
                 {
-                    var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
+                    var responseData = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBody);
 
-                    PlayerModel playerMode = new PlayerModel(responseData["plyerName"].ToString())
+                    PlayerModel playerMode = new PlayerModel(responseData["playerName"].ToString())
                     {
                         metal = Convert.ToInt32(responseData["metal"]),
                         crystal = Convert.ToInt32(responseData["crystal"]),
                         deuterium = Convert.ToInt32(responseData["deuterium"]),
-                        Planets = new List<PlayerModel>()
+                        Planets = new List<PlanetModel>()
                     };
                     onSuccess?.Invoke(playerMode);
                     Debug.Log("Login successful");

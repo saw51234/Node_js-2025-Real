@@ -10,7 +10,7 @@ public class PlayerModel
     public int metal;
     public int crystal;
     public int deuterium;
-    public List<PlayerModel> Planets;
+    public List<PlanetModel> Planets;
 
     public PlayerModel(string name)
     {

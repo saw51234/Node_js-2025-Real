@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const router = express.Router();
 
+const resourceFilePath = 'resources.json';
+
 const initalResources = {
     metal : 500,
     crystal : 300,
@@ -19,7 +21,7 @@ router.post('/register', (req, res) => {
     }
 
     global,players[name] = {
-        playername : name,
+        playerName : name,
         password : password,
         resoureces: {
             metal : 500,
@@ -40,7 +42,7 @@ router.post('/login', (req, res) => {
     
     const {name, password} = req.body;
 
-    if(!gloabal.players[name])
+    if(!global.players[name])
     {
         return res.status(404).send({message : '플레이어를 찾을 수 없습니다. '})
     }
@@ -50,8 +52,10 @@ router.post('/login', (req, res) => {
         return res.status(401).send({message : '비밀번호가 틀렸습니다.'});
     }
 
+    const player = global.players[name];
+
     const reqponsePayLoad = {
-        playerName: player,playerName,
+        playerName : player.playerName,
         metal : player.resoureces.metal,
         crystal : player.resoureces.crystal,
         deuterium : player.resoureces.deuterium
@@ -62,5 +66,10 @@ router.post('/login', (req, res) => {
 
 
 });
+
+function saveResources()
+{
+    fs.writeFileSync(resourceFilePath, JSON.stringify(global.players, null, 2));
+}
 
 module.exports = router;
